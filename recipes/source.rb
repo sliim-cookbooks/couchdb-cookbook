@@ -107,3 +107,10 @@ service 'couchdb' do
   supports [:restart, :status]
   action [:enable, :start]
 end
+
+execute 'systemctl-daemon-reload' do
+  action :nothing
+  command 'systemctl daemon-reload'
+  subscribes :run, 'cookbook_file[/etc/init.d/couchdb]', :immediately
+  only_if { node['init_package'] == 'systemd' }
+end
